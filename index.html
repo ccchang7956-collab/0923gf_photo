@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>災害通報系統</title>
+  <title>災害通報 - 資料上傳</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card {
@@ -12,10 +12,24 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       border: 1px solid #f3f4f6;
     }
+    .input-field {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.125rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-field:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
     .btn-primary {
+      width: 100%;
       background-color: #2563eb;
       color: white;
-      padding: 1rem 2rem;
+      padding: 1rem 1.5rem;
       border-radius: 0.75rem;
       font-weight: bold;
       font-size: 1.125rem;
@@ -23,219 +37,268 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       border: none;
       cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
     }
     .btn-primary:hover {
       background-color: #1d4ed8;
-      transform: translateY(-2px);
+    }
+    .btn-primary:active {
+      background-color: #1e40af;
     }
     .btn-secondary {
-      background-color: #059669;
-      color: white;
-      padding: 1rem 2rem;
+      background-color: #f3f4f6;
+      color: #374151;
+      padding: 0.75rem 1.5rem;
       border-radius: 0.75rem;
-      font-weight: bold;
-      font-size: 1.125rem;
+      font-weight: 600;
       transition: all 0.2s;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       border: none;
       cursor: pointer;
       text-decoration: none;
       display: inline-block;
-      text-align: center;
     }
     .btn-secondary:hover {
-      background-color: #047857;
-      transform: translateY(-2px);
+      background-color: #e5e7eb;
     }
-    .feature-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      margin-bottom: 1.5rem;
-      transition: transform 0.3s ease;
+    .btn-secondary:active {
+      background-color: #d1d5db;
     }
-    .feature-card:hover {
-      transform: translateY(-5px);
+    .label {
+      display: block;
+      color: #374151;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      font-size: 1.125rem;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
     }
     @media (max-width: 640px) {
       .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      .card {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
       }
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 via-white to-green-50 min-h-screen">
-  <!-- 主標題 -->
-  <div class="bg-gradient-to-r from-blue-600 to-green-600 text-white">
-    <div class="container mx-auto px-4 py-12 text-center">
-      <h1 class="text-4xl md:text-6xl font-bold mb-4">🚨 災害通報系統</h1>
-      <p class="text-xl md:text-2xl opacity-90 mb-8">花蓮縣光復鄉 - 快速、便民、有效率</p>
-      <div class="flex flex-col md:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-        <a href="upload.html" class="btn-primary w-full md:w-auto">
-          📤 我要通報災害
-        </a>
-        <a href="search.html" class="btn-secondary w-full md:w-auto">
-          🔍 查詢通報紀錄
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen">
+  <!-- 手機版標題卡片 -->
+  <div class="sticky top-0 z-40 bg-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+      <div class="text-center">
+        <h1 class="text-xl font-bold text-blue-600">🚨 災害通報系統</h1>
+        <p class="text-sm text-gray-600">花蓮縣光復鄉 - 資料上傳</p>
+      </div>
+      
+      <!-- 導航按鈕 -->
+      <div class="flex mt-4 gap-2">
+        <button class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold text-sm">
+          📤 上傳資料
+        </button>
+        <a href="search.html" class="flex-1 btn-secondary text-center py-2 px-4 text-sm">
+          🔍 查詢資料
         </a>
       </div>
     </div>
   </div>
 
-  <div class="container mx-auto px-4 py-12 max-w-6xl">
-    <!-- 功能介紹 -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-      <div class="feature-card">
-        <div class="text-4xl mb-4">📱</div>
-        <h3 class="text-xl font-bold mb-2">手機友好</h3>
-        <p class="opacity-90">專為手機設計的介面，拍照上傳簡單快速</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="text-4xl mb-4">⚡</div>
-        <h3 class="text-xl font-bold mb-2">即時通報</h3>
-        <p class="opacity-90">24小時線上服務，隨時可以提交災害通報</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="text-4xl mb-4">🔒</div>
-        <h3 class="text-xl font-bold mb-2">資料安全</h3>
-        <p class="opacity-90">使用 Google 雲端服務，確保資料安全可靠</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="text-4xl mb-4">📍</div>
-        <h3 class="text-xl font-bold mb-2">精確定位</h3>
-        <p class="opacity-90">詳細地址資訊，幫助救災人員快速定位</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="text-4xl mb-4">📸</div>
-        <h3 class="text-xl font-bold mb-2">照片記錄</h3>
-        <p class="opacity-90">支援多張照片上傳，完整記錄災害現況</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="text-4xl mb-4">🔍</div>
-        <h3 class="text-xl font-bold mb-2">快速查詢</h3>
-        <p class="opacity-90">輸入電話號碼即可查詢所有通報紀錄</p>
-      </div>
-    </div>
-
-    <!-- 使用說明 -->
-    <div class="card p-8 mb-12">
-      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">📋 使用說明</h2>
-      
-      <div class="grid md:grid-cols-2 gap-8">
-        <div>
-          <h3 class="text-xl font-bold text-blue-600 mb-4">📤 災害通報流程</h3>
-          <ol class="space-y-3 text-gray-700">
-            <li class="flex items-start">
-              <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">1</span>
-              <span>填寫基本資料（姓名、電話、信箱）</span>
-            </li>
-            <li class="flex items-start">
-              <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">2</span>
-              <span>選擇災害發生地點（村、鄰、詳細地址）</span>
-            </li>
-            <li class="flex items-start">
-              <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">3</span>
-              <span>上傳現場照片（最多5張）</span>
-            </li>
-            <li class="flex items-start">
-              <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">4</span>
-              <span>提交資料並記錄編號</span>
-            </li>
-          </ol>
-        </div>
-        
-        <div>
-          <h3 class="text-xl font-bold text-green-600 mb-4">🔍 查詢紀錄流程</h3>
-          <ol class="space-y-3 text-gray-700">
-            <li class="flex items-start">
-              <span class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">1</span>
-              <span>輸入通報時使用的電話號碼</span>
-            </li>
-            <li class="flex items-start">
-              <span class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">2</span>
-              <span>系統顯示所有相關通報紀錄</span>
-            </li>
-            <li class="flex items-start">
-              <span class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">3</span>
-              <span>點擊查看詳細資料和照片</span>
-            </li>
-            <li class="flex items-start">
-              <span class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">4</span>
-              <span>管理員可下載完整資料</span>
-            </li>
-          </ol>
-        </div>
-      </div>
-    </div>
-
-    <!-- 重要提醒 -->
-    <div class="card p-6 bg-yellow-50 border-l-4 border-yellow-400 mb-12">
+  <div class="container mx-auto px-4 py-6 pb-20">
+    <!-- 系統設定提醒 -->
+    <div id="configWarning" class="card p-4 mb-6 bg-yellow-50 border-yellow-200">
       <div class="flex items-start">
         <div class="text-2xl mr-3">⚠️</div>
         <div>
-          <h3 class="text-lg font-bold text-yellow-800 mb-2">重要提醒</h3>
-          <ul class="text-yellow-700 space-y-1">
-            <li>• 緊急狀況請先撥打 119 或 110</li>
-            <li>• 請確保所提供的資訊準確無誤</li>
-            <li>• 上傳的照片將用於災害評估和救助</li>
-            <li>• 系統24小時開放，但處理時間依實際狀況而定</li>
-          </ul>
+          <h3 class="text-lg font-bold text-yellow-800 mb-2">系統設定提醒</h3>
+          <p class="text-yellow-700 text-sm mb-3">
+            請先在 <code class="bg-yellow-200 px-1 rounded">config.js</code> 中設定您的 Google Apps Script 網址
+          </p>
+          <button onclick="hideConfigWarning()" class="bg-yellow-600 text-white py-1 px-3 rounded text-sm">
+            我知道了
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- 聯絡資訊 -->
-    <div class="text-center text-gray-600">
-      <p class="mb-2">🏢 花蓮縣光復鄉公所</p>
-      <p class="mb-2">📞 緊急聯絡：119 / 110</p>
-      <p class="mb-4">📧 系統問題請洽：admin@example.com</p>
-      <p class="text-sm opacity-75">© 2024 花蓮縣光復鄉災害通報系統. 保留所有權利.</p>
+    <!-- 主表單卡片 -->
+    <div class="card p-6 mb-6">
+      <form id="uploadForm" class="space-y-6">
+        
+        <!-- 基本資料卡片 -->
+        <div class="card p-5 bg-blue-50 border-blue-200">
+          <h2 class="section-title text-blue-800">👤 基本資料</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="label">
+                姓名 <span class="text-red-500">*</span>
+              </label>
+              <input type="text" id="name" required class="input-field" placeholder="請輸入您的姓名">
+            </div>
+
+            <div>
+              <label class="label">
+                電話 <span class="text-red-500">*</span>
+              </label>
+              <input type="tel" id="phone" required pattern="[0-9]{10}" class="input-field" 
+                     placeholder="0912345678" inputmode="numeric">
+              <p class="text-sm text-gray-500 mt-1">請輸入10碼電話號碼</p>
+            </div>
+
+            <div>
+              <label class="label">信箱</label>
+              <input type="email" id="email" class="input-field" placeholder="your@email.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- 地址資料卡片 -->
+        <div class="card p-5 bg-green-50 border-green-200">
+          <h2 class="section-title text-green-800">📍 地址資料</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="label">
+                村 <span class="text-red-500">*</span>
+              </label>
+              <select id="village" required class="input-field bg-white">
+                <option value="">🏘️ 請選擇村</option>
+                <option value="大安村">大安村</option>
+                <option value="大華村">大華村</option>
+                <option value="大平村">大平村</option>
+                <option value="大馬村">大馬村</option>
+                <option value="大同村">大同村</option>
+                <option value="東富村">東富村</option>
+                <option value="北富村">北富村</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="label">
+                鄰 <span class="text-red-500">*</span>
+              </label>
+              <input type="number" id="neighborhood" required min="1" max="50" 
+                     class="input-field" placeholder="請輸入鄰數" inputmode="numeric">
+            </div>
+
+            <div>
+              <label class="label">
+                詳細地址 <span class="text-red-500">*</span>
+              </label>
+              <input type="text" id="address" required class="input-field" 
+                     placeholder="例：中正路123號">
+            </div>
+
+            <!-- 地址預覽卡片 -->
+            <div class="card p-4 bg-gradient-to-r from-green-100 to-blue-100 border-green-300">
+              <p class="text-sm font-semibold text-gray-700 mb-1">📍 完整地址預覽：</p>
+              <p id="fullAddressPreview" class="text-green-700 font-bold text-lg">花蓮縣光復鄉...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 照片上傳卡片 -->
+        <div class="card p-5 bg-yellow-50 border-yellow-200">
+          <h2 class="section-title text-yellow-800">📸 照片上傳（最多5張）</h2>
+          
+          <!-- 照片選擇按鈕 -->
+          <div class="mb-4">
+            <label for="imageInput" class="block">
+              <div class="card p-6 border-2 border-dashed border-yellow-400 bg-yellow-100 hover:bg-yellow-200 transition-colors cursor-pointer text-center">
+                <div class="text-4xl mb-2">📷</div>
+                <p class="font-bold text-yellow-800">點擊選擇照片</p>
+                <p class="text-sm text-yellow-700 mt-1">支援多選，最多5張</p>
+              </div>
+            </label>
+            <input type="file" id="imageInput" accept="image/*" multiple class="hidden" capture="environment">
+          </div>
+          
+          <!-- 照片預覽區 -->
+          <div id="imagePreview" class="grid grid-cols-2 gap-3"></div>
+          
+          <!-- 照片數量提示 -->
+          <div id="imageCount" class="mt-3 text-center text-sm text-gray-600 hidden">
+            已選擇 <span id="imageCountNumber">0</span> 張照片
+          </div>
+        </div>
+
+        <!-- 提交按鈕 -->
+        <div class="pt-4">
+          <button type="submit" id="submitBtn" class="btn-primary">
+            🚀 送出資料
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 進度卡片 -->
+    <div id="progressCard" class="card p-6 mb-6 hidden">
+      <h3 class="text-lg font-bold text-center mb-4">📤 上傳進度</h3>
+      
+      <!-- 進度條 -->
+      <div class="bg-gray-200 rounded-full h-8 overflow-hidden mb-3">
+        <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-green-500 h-full transition-all duration-500 flex items-center justify-center text-white font-bold">
+          0%
+        </div>
+      </div>
+      
+      <!-- 進度文字 -->
+      <p id="progressText" class="text-center text-gray-600 font-semibold">準備中...</p>
+      
+      <!-- 載入動畫 -->
+      <div class="flex justify-center mt-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    </div>
+
+    <!-- 成功訊息卡片 -->
+    <div id="successCard" class="card p-6 mb-6 hidden bg-green-50 border-green-200">
+      <div class="text-center">
+        <div class="text-6xl mb-4">✅</div>
+        <h3 class="text-xl font-bold text-green-800 mb-2">上傳成功！</h3>
+        <div class="card p-4 bg-white border-2 border-green-300">
+          <p class="font-bold text-gray-700">您的編號：</p>
+          <p id="recordIdDisplay" class="text-2xl font-bold text-green-600"></p>
+        </div>
+        <p class="text-sm text-green-700 mt-3">請記住此編號，以便日後查詢</p>
+        <div class="mt-4 space-x-2">
+          <button onclick="resetForm()" class="bg-blue-600 text-white py-2 px-4 rounded-lg">
+            繼續上傳
+          </button>
+          <a href="search.html" class="bg-green-600 text-white py-2 px-4 rounded-lg inline-block">
+            查詢紀錄
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 錯誤訊息卡片 -->
+    <div id="errorCard" class="card p-6 mb-6 hidden bg-red-50 border-red-200">
+      <div class="text-center">
+        <div class="text-6xl mb-4">❌</div>
+        <h3 class="text-xl font-bold text-red-800 mb-2">發生錯誤</h3>
+        <div class="card p-4 bg-white border-2 border-red-300">
+          <p id="errorText" class="text-red-700"></p>
+        </div>
+        <button onclick="hideError()" class="mt-4 bg-red-600 text-white py-2 px-6 rounded-lg">
+          重新嘗試
+        </button>
+      </div>
     </div>
   </div>
 
-  <script>
-    // 檢測設備類型並自動跳轉適合的頁面
-    function detectDevice() {
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      return isMobile;
-    }
+  <!-- 底部安全區域 -->
+  <div class="h-8"></div>
 
-    // 平滑滾動效果
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
-
-    // 頁面載入動畫
-    document.addEventListener('DOMContentLoaded', function() {
-      const cards = document.querySelectorAll('.feature-card');
-      cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, index * 100);
-      });
-    });
-  </script>
+  <!-- 設定檔和主要 JavaScript -->
+  <script src="config.js"></script>
+  <script src="upload.js"></script>
 </body>
 </html>
