@@ -103,7 +103,7 @@ function createRecordCardHTML(record, index) {
   return `
     <div class="flex justify-between items-start mb-3">
       <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">
-        📋 ${record.recordId}
+        <i class="fas fa-file-alt"></i> ${record.recordId}
       </span>
       <span class="text-xs text-gray-500">
         ${record.uploadTime}
@@ -112,23 +112,23 @@ function createRecordCardHTML(record, index) {
     
     <div class="space-y-2 mb-4">
       <div class="flex items-center">
-        <span class="text-gray-600 font-semibold w-16 flex-shrink-0">👤</span>
+        <span class="text-gray-600 font-semibold w-16 flex-shrink-0"><i class="fas fa-user"></i></span>
         <span class="text-gray-800">${record.name}</span>
       </div>
       <div class="flex items-center">
-        <span class="text-gray-600 font-semibold w-16 flex-shrink-0">📞</span>
+        <span class="text-gray-600 font-semibold w-16 flex-shrink-0"><i class="fas fa-phone"></i></span>
         <span class="text-gray-800">${record.phone}</span>
       </div>
       <div class="flex items-center">
-        <span class="text-gray-600 font-semibold w-16 flex-shrink-0">📧</span>
+        <span class="text-gray-600 font-semibold w-16 flex-shrink-0"><i class="fas fa-envelope"></i></span>
         <span class="text-gray-800">${record.email || '未提供'}</span>
       </div>
       <div class="flex items-start">
-        <span class="text-gray-600 font-semibold w-16 flex-shrink-0">🏠</span>
+        <span class="text-gray-600 font-semibold w-16 flex-shrink-0"><i class="fas fa-home"></i></span>
         <span class="text-gray-800">${record.fullAddress}</span>
       </div>
       <div class="flex items-center">
-        <span class="text-gray-600 font-semibold w-16 flex-shrink-0">📸</span>
+        <span class="text-gray-600 font-semibold w-16 flex-shrink-0"><i class="fas fa-camera"></i></span>
         <span class="text-gray-800">${record.imageCount} 張照片</span>
       </div>
     </div>
@@ -136,11 +136,11 @@ function createRecordCardHTML(record, index) {
     <div class="grid grid-cols-2 gap-2">
       <button onclick="viewImages('${record.folderId}', '${record.fullAddress}')" 
               class="bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 active:bg-blue-800 transition-all">
-        📸 查看照片
+        <i class="fas fa-eye"></i> 查看照片
       </button>
       <button onclick="downloadZip('${record.folderId}', '${record.recordId}')" 
               class="bg-gray-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-gray-700 active:bg-gray-800 transition-all">
-        📥 下載
+        <i class="fas fa-download"></i> 下載
       </button>
     </div>
   `;
@@ -152,7 +152,7 @@ window.viewImages = async function(folderId, address) {
   const modalTitle = document.getElementById('modalTitle');
   const modalContent = document.getElementById('modalContent');
   
-  modalTitle.textContent = `📸 ${address}`;
+  modalTitle.innerHTML = `<i class="fas fa-images"></i> ${address}`;
   modalContent.innerHTML = createLoadingHTML();
   modal.classList.remove('hidden');
   

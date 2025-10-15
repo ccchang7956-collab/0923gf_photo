@@ -154,7 +154,7 @@ async function handleFormSubmit(e) {
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.disabled = true;
   submitBtn.classList.add('opacity-50');
-  submitBtn.innerHTML = '⏳ 上傳中...';
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 上傳中...';
   
   try {
     // 驗證表單
@@ -249,7 +249,7 @@ function resetSubmitButton() {
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.disabled = false;
   submitBtn.classList.remove('opacity-50');
-  submitBtn.innerHTML = '🚀 送出資料';
+  submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 送出資料';
 }
 
 // ==================== 顯示/隱藏卡片 ====================

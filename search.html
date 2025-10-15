@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>災害通報 - 查詢資料</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .card {
       background-color: white;
@@ -87,17 +88,17 @@
   <div class="sticky top-0 z-40 bg-white shadow-lg">
     <div class="container mx-auto px-4 py-4">
       <div class="text-center">
-        <h1 class="text-xl font-bold text-green-600">🔍 災害通報系統</h1>
+        <h1 class="text-xl font-bold text-green-600"><i class="fas fa-search"></i> 災害通報系統</h1>
         <p class="text-sm text-gray-600">花蓮縣光復鄉 - 查詢資料</p>
       </div>
       
       <!-- 導航按鈕 -->
       <div class="flex mt-4 gap-2">
         <a href="index.html" class="flex-1 btn-secondary text-center py-2 px-4 text-sm">
-          📤 上傳資料
+          <i class="fas fa-upload"></i> 上傳資料
         </a>
         <button class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-semibold text-sm">
-          🔍 查詢資料
+          <i class="fas fa-search"></i> 查詢資料
         </button>
       </div>
     </div>
@@ -107,9 +108,9 @@
     <!-- 系統設定提醒 -->
     <div id="configWarning" class="card p-4 mb-6 bg-yellow-50 border-yellow-200">
       <div class="flex items-start">
-        <div class="text-2xl mr-3">⚠️</div>
+        <div class="text-2xl mr-3"><i class="fas fa-exclamation-triangle text-yellow-600"></i></div>
         <div>
-          <h3 class="text-lg font-bold text-yellow-800 mb-2">系統設定提醒</h3>
+          <h3 class="text-lg font-bold text-yellow-800 mb-2"><i class="fas fa-cog"></i> 系統設定提醒</h3>
           <p class="text-yellow-700 text-sm mb-3">
             請先在 <code class="bg-yellow-200 px-1 rounded">config.js</code> 中設定您的 Google Apps Script 網址
           </p>
@@ -123,7 +124,7 @@
     <!-- 查詢表單卡片 -->
     <div class="card p-6 mb-6">
       <h2 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-200">
-        📱 輸入電話號碼查詢
+        <i class="fas fa-phone"></i> 輸入電話號碼查詢
       </h2>
       
       <form id="queryForm">
@@ -138,7 +139,7 @@
           </div>
           
           <button type="submit" class="btn-primary w-full">
-            🔍 開始查詢
+            <i class="fas fa-search"></i> 開始查詢
           </button>
         </div>
       </form>
@@ -146,7 +147,7 @@
 
     <!-- 載入中卡片 -->
     <div id="loadingCard" class="card p-8 mb-6 hidden text-center">
-      <div class="text-6xl mb-4">⏳</div>
+      <div class="text-6xl mb-4"><i class="fas fa-spinner fa-spin text-blue-600"></i></div>
       <h3 class="text-xl font-bold text-gray-800 mb-4">查詢中...</h3>
       <div class="flex justify-center">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600"></div>
@@ -157,7 +158,7 @@
     <!-- 查詢結果區域 -->
     <div id="resultsSection" class="hidden">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-gray-800">📋 查詢結果</h2>
+        <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-list"></i> 查詢結果</h2>
         <span id="resultCount" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold"></span>
       </div>
       <div id="recordsList" class="space-y-4"></div>
@@ -165,7 +166,7 @@
 
     <!-- 無結果卡片 -->
     <div id="noResultsCard" class="card p-8 mb-6 hidden text-center">
-      <div class="text-6xl mb-4">😔</div>
+      <div class="text-6xl mb-4"><i class="fas fa-search-minus text-gray-600"></i></div>
       <h3 class="text-xl font-bold text-gray-800 mb-2">查無資料</h3>
       <p class="text-gray-600 mb-4">找不到此電話號碼的相關紀錄</p>
       <div class="card p-4 bg-gray-50">
@@ -177,8 +178,8 @@
         </ul>
       </div>
       <div class="mt-4">
-        <a href="upload.html" class="bg-blue-600 text-white py-2 px-4 rounded-lg inline-block">
-          前往上傳資料
+        <a href="index.html" class="bg-blue-600 text-white py-2 px-4 rounded-lg inline-block">
+          <i class="fas fa-upload"></i> 前往上傳資料
         </a>
       </div>
     </div>
@@ -186,7 +187,7 @@
     <!-- 錯誤訊息卡片 -->
     <div id="errorCard" class="card p-6 mb-6 hidden bg-red-50 border-red-200">
       <div class="text-center">
-        <div class="text-6xl mb-4">❌</div>
+        <div class="text-6xl mb-4"><i class="fas fa-exclamation-circle text-red-600"></i></div>
         <h3 class="text-xl font-bold text-red-800 mb-2">查詢失敗</h3>
         <div class="card p-4 bg-white border-2 border-red-300">
           <p id="errorText" class="text-red-700"></p>
@@ -202,7 +203,7 @@
   <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl max-w-full w-full max-h-full overflow-auto">
       <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center shadow-sm">
-        <h3 class="text-lg font-bold" id="modalTitle">📸 照片檢視</h3>
+        <h3 class="text-lg font-bold" id="modalTitle"><i class="fas fa-images"></i> 照片檢視</h3>
         <button onclick="closeModal()" class="text-gray-600 hover:text-gray-800 text-3xl font-bold w-10 h-10 flex items-center justify-center">×</button>
       </div>
       <div id="modalContent" class="p-4"></div>

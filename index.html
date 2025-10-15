@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>災害通報 - 資料上傳</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .card {
       background-color: white;
@@ -94,17 +95,17 @@
   <div class="sticky top-0 z-40 bg-white shadow-lg">
     <div class="container mx-auto px-4 py-4">
       <div class="text-center">
-        <h1 class="text-xl font-bold text-blue-600">🚨 災害通報系統</h1>
+        <h1 class="text-xl font-bold text-blue-600"><i class="fas fa-exclamation-triangle"></i> 災害通報系統</h1>
         <p class="text-sm text-gray-600">花蓮縣光復鄉 - 資料上傳</p>
       </div>
       
       <!-- 導航按鈕 -->
       <div class="flex mt-4 gap-2">
         <button class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold text-sm">
-          📤 上傳資料
+          <i class="fas fa-upload"></i> 上傳資料
         </button>
         <a href="search.html" class="flex-1 btn-secondary text-center py-2 px-4 text-sm">
-          🔍 查詢資料
+          <i class="fas fa-search"></i> 查詢資料
         </a>
       </div>
     </div>
@@ -114,9 +115,9 @@
     <!-- 系統設定提醒 -->
     <div id="configWarning" class="card p-4 mb-6 bg-yellow-50 border-yellow-200">
       <div class="flex items-start">
-        <div class="text-2xl mr-3">⚠️</div>
+        <div class="text-2xl mr-3"><i class="fas fa-exclamation-triangle text-yellow-600"></i></div>
         <div>
-          <h3 class="text-lg font-bold text-yellow-800 mb-2">系統設定提醒</h3>
+          <h3 class="text-lg font-bold text-yellow-800 mb-2"><i class="fas fa-cog"></i> 系統設定提醒</h3>
           <p class="text-yellow-700 text-sm mb-3">
             請先在 <code class="bg-yellow-200 px-1 rounded">config.js</code> 中設定您的 Google Apps Script 網址
           </p>
@@ -130,7 +131,7 @@
     <form id="uploadForm">
       <!-- 基本資料卡片 -->
       <div class="card p-6 mb-6 bg-blue-50 border-blue-200">
-        <h2 class="section-title text-blue-800">👤 基本資料</h2>
+        <h2 class="section-title text-blue-800"><i class="fas fa-user"></i> 基本資料</h2>
         
         <div class="space-y-4">
           <div>
@@ -158,7 +159,7 @@
 
       <!-- 地址資料卡片 -->
       <div class="card p-6 mb-6 bg-green-50 border-green-200">
-        <h2 class="section-title text-green-800">📍 地址資料</h2>
+        <h2 class="section-title text-green-800"><i class="fas fa-map-marker-alt"></i> 地址資料</h2>
         
         <div class="space-y-4">
           <div>
@@ -166,7 +167,7 @@
               村 <span class="text-red-500">*</span>
             </label>
             <select id="village" required class="input-field bg-white">
-              <option value="">🏘️ 請選擇村</option>
+              <option value=""><i class="fas fa-home"></i> 請選擇村</option>
               <option value="大安村">大安村</option>
               <option value="大華村">大華村</option>
               <option value="大平村">大平村</option>
@@ -195,7 +196,7 @@
 
           <!-- 地址預覽 -->
           <div class="p-4 bg-green-100 border border-green-300 rounded-lg">
-            <p class="text-sm font-semibold text-gray-700 mb-1">📍 完整地址預覽：</p>
+            <p class="text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-map-pin"></i> 完整地址預覽：</p>
             <p id="fullAddressPreview" class="text-green-700 font-bold text-lg">花蓮縣光復鄉...</p>
           </div>
         </div>
@@ -203,13 +204,13 @@
 
       <!-- 照片上傳卡片 -->
       <div class="card p-6 mb-6 bg-yellow-50 border-yellow-200">
-        <h2 class="section-title text-yellow-800">📸 照片上傳（最多5張）</h2>
+        <h2 class="section-title text-yellow-800"><i class="fas fa-camera"></i> 照片上傳（最多5張）</h2>
         
         <!-- 照片選擇按鈕 -->
         <div class="mb-4">
           <label for="imageInput" class="block">
             <div class="p-6 border-2 border-dashed border-yellow-400 bg-yellow-100 hover:bg-yellow-200 transition-colors cursor-pointer text-center rounded-lg">
-              <div class="text-4xl mb-2">📷</div>
+              <div class="text-4xl mb-2"><i class="fas fa-image"></i></div>
               <p class="font-bold text-yellow-800">點擊選擇照片</p>
               <p class="text-sm text-yellow-700 mt-1">支援多選，最多5張</p>
             </div>
@@ -229,14 +230,14 @@
       <!-- 提交按鈕卡片 -->
       <div class="card p-6 mb-6">
         <button type="submit" id="submitBtn" class="btn-primary">
-          🚀 送出資料
+          <i class="fas fa-paper-plane"></i> 送出資料
         </button>
       </div>
     </form>
 
     <!-- 進度卡片 -->
     <div id="progressCard" class="card p-6 mb-6 hidden">
-      <h3 class="text-lg font-bold text-center mb-4">📤 上傳進度</h3>
+      <h3 class="text-lg font-bold text-center mb-4"><i class="fas fa-upload"></i> 上傳進度</h3>
       
       <!-- 進度條 -->
       <div class="bg-gray-200 rounded-full h-8 overflow-hidden mb-3">
@@ -257,7 +258,7 @@
     <!-- 成功訊息卡片 -->
     <div id="successCard" class="card p-6 mb-6 hidden bg-green-50 border-green-200">
       <div class="text-center">
-        <div class="text-6xl mb-4">✅</div>
+        <div class="text-6xl mb-4"><i class="fas fa-check-circle text-green-600"></i></div>
         <h3 class="text-xl font-bold text-green-800 mb-2">上傳成功！</h3>
         <div class="card p-4 bg-white border-2 border-green-300">
           <p class="font-bold text-gray-700">您的編號：</p>
@@ -266,10 +267,10 @@
         <p class="text-sm text-green-700 mt-3">請記住此編號，以便日後查詢</p>
         <div class="mt-4 space-x-2">
           <button onclick="resetForm()" class="bg-blue-600 text-white py-2 px-4 rounded-lg">
-            繼續上傳
+            <i class="fas fa-plus"></i> 繼續上傳
           </button>
           <a href="search.html" class="bg-green-600 text-white py-2 px-4 rounded-lg inline-block">
-            查詢紀錄
+            <i class="fas fa-search"></i> 查詢紀錄
           </a>
         </div>
       </div>
@@ -278,7 +279,7 @@
     <!-- 錯誤訊息卡片 -->
     <div id="errorCard" class="card p-6 mb-6 hidden bg-red-50 border-red-200">
       <div class="text-center">
-        <div class="text-6xl mb-4">❌</div>
+        <div class="text-6xl mb-4"><i class="fas fa-times-circle text-red-600"></i></div>
         <h3 class="text-xl font-bold text-red-800 mb-2">發生錯誤</h3>
         <div class="card p-4 bg-white border-2 border-red-300">
           <p id="errorText" class="text-red-700"></p>
