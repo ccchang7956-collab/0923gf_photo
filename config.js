@@ -79,33 +79,8 @@ async function callAPI(action, data) {
   }
 }
 
-// ==================== 上傳資料函數 ====================
-async function uploadData(uploadData) {
-  return await callAPI('upload', uploadData);
-}
-
-// ==================== 查詢資料函數 ====================
-async function queryData(phone) {
-  return await callAPI('query', { phone: phone });
-}
-
-// ==================== 取得照片函數 ====================
-async function getImages(folderId) {
-  return await callAPI('getImages', { folderId: folderId });
-}
-
-// ==================== 取得單張照片 ====================
-async function getImageBase64(fileId) {
-  return await callAPI('getImageBase64', { fileId: fileId });
-}
-
-// ==================== 下載 ZIP 檔案 ====================
-async function downloadZip(folderId, adminKey) {
-  return await callAPI('downloadZip', { 
-    folderId: folderId, 
-    adminKey: adminKey 
-  });
-}
+// ==================== API 呼叫都使用 callAPI 函數 ====================
+// 所有 API 呼叫現在直接使用 callAPI 函數，避免重複定義
 
 // ==================== 工具函數 ====================
 

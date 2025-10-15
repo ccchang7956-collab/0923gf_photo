@@ -63,7 +63,7 @@ async function handleQuerySubmit(e) {
   
   try {
     // 呼叫 API 查詢資料
-    const result = await queryData(phone);
+    const result = await callAPI('query', { phone: phone });
     
     hideCard('loadingCard');
     
@@ -157,7 +157,7 @@ window.viewImages = async function(folderId, address) {
   modal.classList.remove('hidden');
   
   try {
-    const images = await getImages(folderId);
+    const images = await callAPI('getImages', { folderId: folderId });
     
     if (!images || images.length === 0) {
       modalContent.innerHTML = '<p class="text-center text-gray-600 py-8">此紀錄沒有照片</p>';
@@ -172,7 +172,7 @@ window.viewImages = async function(folderId, address) {
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
       try {
-        const result = await getImageBase64(image.id);
+        const result = await callAPI('getImageBase64', { fileId: image.id });
         
         if (result.success) {
           const imgDiv = document.createElement('div');
@@ -264,7 +264,10 @@ window.downloadZip = async function(folderId, recordId) {
   try {
     showCard('loadingCard');
     
-    const result = await downloadZip(folderId, adminKey);
+    const result = await callAPI('downloadZip', { 
+      folderId: folderId, 
+      adminKey: adminKey 
+    });
     
     hideCard('loadingCard');
     

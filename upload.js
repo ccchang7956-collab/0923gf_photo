@@ -183,7 +183,7 @@ async function handleFormSubmit(e) {
     updateProgress(50, '☁️ 上傳中...');
     
     // 呼叫 API 上傳資料
-    const result = await uploadData(uploadData);
+    const result = await callAPI('upload', uploadData);
     
     updateProgress(100, '✅ 完成！');
     
