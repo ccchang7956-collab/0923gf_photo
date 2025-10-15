@@ -204,6 +204,7 @@ window.viewImages = async function(folderId, address) {
   const modalTitle = document.getElementById('modalTitle');
   const modalContent = document.getElementById('modalContent');
   
+  // 設定標題和載入畫面
   modalTitle.innerHTML = `<i class="fas fa-images"></i> ${address}`;
   modalContent.innerHTML = createLoadingHTML();
   modal.classList.remove('hidden');
@@ -223,31 +224,51 @@ window.viewImages = async function(folderId, address) {
       return;
     }
     
-    modalContent.innerHTML = '';
+    // 創建照片容器
     const grid = document.createElement('div');
     grid.className = 'space-y-4';
     
-    // 逐一載入照片
-    for (let i = 0; i < imageList.length; i++) {
-      const image = imageList[i];
+    // 載入所有照片的 Promise 陣列
+    const loadPromises = imageList.map(async (image, i) => {
       try {
         const result = await callAPI('getImageBase64', { fileId: image.id });
         
         if (result.success) {
-          const imgDiv = document.createElement('div');
-          imgDiv.className = 'card p-3';
-          imgDiv.innerHTML = createImageHTML(result.data, i + 1, image.name);
-          grid.appendChild(imgDiv);
+          return {
+            success: true,
+            html: createImageHTML(result.data, i + 1, image.name),
+            index: i
+          };
+        } else {
+          return {
+            success: false,
+            html: `<div class="card p-3 bg-red-50"><p class="text-red-600 text-center">載入圖片失敗: ${image.name}</p></div>`,
+            index: i
+          };
         }
       } catch (error) {
         console.error(`載入圖片 ${image.id} 失敗:`, error);
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'card p-3 bg-red-50';
-        errorDiv.innerHTML = `<p class="text-red-600 text-center">載入圖片失敗: ${image.name}</p>`;
-        grid.appendChild(errorDiv);
+        return {
+          success: false,
+          html: `<div class="card p-3 bg-red-50"><p class="text-red-600 text-center">載入圖片失敗: ${image.name}</p></div>`,
+          index: i
+        };
       }
-    }
+    });
     
+    // 等待所有照片載入完成
+    const results = await Promise.all(loadPromises);
+    
+    // 按順序顯示照片
+    results.sort((a, b) => a.index - b.index).forEach(result => {
+      const imgDiv = document.createElement('div');
+      imgDiv.className = result.success ? 'card p-3' : '';
+      imgDiv.innerHTML = result.html;
+      grid.appendChild(imgDiv);
+    });
+    
+    // 一次性更新內容
+    modalContent.innerHTML = '';
     modalContent.appendChild(grid);
     
   } catch (error) {
@@ -261,7 +282,8 @@ function createLoadingHTML() {
   return `
     <div class="text-center py-8">
       <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto"></div>
-      <p class="mt-4 text-gray-600">載入中...</p>
+      <p class="mt-4 text-gray-600">載入照片中...</p>
+      <p class="mt-2 text-sm text-gray-500">請稍候，正在處理圖片資料</p>
     </div>
   `;
 }
