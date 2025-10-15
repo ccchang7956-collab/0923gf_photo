@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>災害通報系統 - 資料上傳</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 自定義樣式 */
+    .card {
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f3f4f6;
+    }
+    .input-field {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.125rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-field:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .btn-primary {
+      width: 100%;
+      background-color: #2563eb;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: bold;
+      font-size: 1.125rem;
+      transition: all 0.2s;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+    .btn-primary:active {
+      background-color: #1e40af;
+    }
+    .btn-secondary {
+      background-color: #f3f4f6;
+      color: #374151;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-secondary:hover {
+      background-color: #e5e7eb;
+    }
+    .btn-secondary:active {
+      background-color: #d1d5db;
+    }
+    .label {
+      display: block;
+      color: #374151;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      font-size: 1.125rem;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    /* 手機專用樣式 */
+    @media (max-width: 640px) {
+      .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      .card {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen">
+  <!-- 手機版標題卡片 -->
+  <div class="sticky top-0 z-40 bg-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+      <div class="text-center">
+        <h1 class="text-xl font-bold text-blue-600">🚨 災害通報系統</h1>
+        <p class="text-sm text-gray-600">花蓮縣光復鄉 - 資料上傳</p>
+      </div>
+      
+      <!-- 導航按鈕 -->
+      <div class="flex mt-4 gap-2">
+        <button class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold text-sm">
+          📤 上傳資料
+        </button>
+        <a href="?page=query" class="flex-1 btn-secondary text-center py-2 px-4 text-sm">
+          🔍 查詢資料
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-6 pb-20">
+    <!-- 主表單卡片 -->
+    <div class="card p-6 mb-6">
+      <form id="uploadForm" class="space-y-6">
+        
+        <!-- 基本資料卡片 -->
+        <div class="card p-5 bg-blue-50 border-blue-200">
+          <h2 class="section-title text-blue-800">👤 基本資料</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="label">
+                姓名 <span class="text-red-500">*</span>
+              </label>
+              <input type="text" id="name" required class="input-field" placeholder="請輸入您的姓名">
+            </div>
+
+            <div>
+              <label class="label">
+                電話 <span class="text-red-500">*</span>
+              </label>
+              <input type="tel" id="phone" required pattern="[0-9]{10}" class="input-field" 
+                     placeholder="0912345678" inputmode="numeric">
+              <p class="text-sm text-gray-500 mt-1">請輸入10碼電話號碼</p>
+            </div>
+
+            <div>
+              <label class="label">信箱</label>
+              <input type="email" id="email" class="input-field" placeholder="your@email.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- 地址資料卡片 -->
+        <div class="card p-5 bg-green-50 border-green-200">
+          <h2 class="section-title text-green-800">📍 地址資料</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="label">
+                村 <span class="text-red-500">*</span>
+              </label>
+              <select id="village" required class="input-field bg-white">
+                <option value="">🏘️ 請選擇村</option>
+                <option value="大安村">大安村</option>
+                <option value="大華村">大華村</option>
+                <option value="大平村">大平村</option>
+                <option value="大馬村">大馬村</option>
+                <option value="大同村">大同村</option>
+                <option value="東富村">東富村</option>
+                <option value="北富村">北富村</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="label">
+                鄰 <span class="text-red-500">*</span>
+              </label>
+              <input type="number" id="neighborhood" required min="1" max="50" 
+                     class="input-field" placeholder="請輸入鄰數" inputmode="numeric">
+            </div>
+
+            <div>
+              <label class="label">
+                詳細地址 <span class="text-red-500">*</span>
+              </label>
+              <input type="text" id="address" required class="input-field" 
+                     placeholder="例：中正路123號">
+            </div>
+
+            <!-- 地址預覽卡片 -->
+            <div class="card p-4 bg-gradient-to-r from-green-100 to-blue-100 border-green-300">
+              <p class="text-sm font-semibold text-gray-700 mb-1">📍 完整地址預覽：</p>
+              <p id="fullAddressPreview" class="text-green-700 font-bold text-lg">花蓮縣光復鄉...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 照片上傳卡片 -->
+        <div class="card p-5 bg-yellow-50 border-yellow-200">
+          <h2 class="section-title text-yellow-800">📸 照片上傳（最多5張）</h2>
+          
+          <!-- 照片選擇按鈕 -->
+          <div class="mb-4">
+            <label for="imageInput" class="block">
+              <div class="card p-6 border-2 border-dashed border-yellow-400 bg-yellow-100 hover:bg-yellow-200 transition-colors cursor-pointer text-center">
+                <div class="text-4xl mb-2">📷</div>
+                <p class="font-bold text-yellow-800">點擊選擇照片</p>
+                <p class="text-sm text-yellow-700 mt-1">支援多選，最多5張</p>
+              </div>
+            </label>
+            <input type="file" id="imageInput" accept="image/*" multiple class="hidden" capture="environment">
+          </div>
+          
+          <!-- 照片預覽區 -->
+          <div id="imagePreview" class="grid grid-cols-2 gap-3"></div>
+          
+          <!-- 照片數量提示 -->
+          <div id="imageCount" class="mt-3 text-center text-sm text-gray-600 hidden">
+            已選擇 <span id="imageCountNumber">0</span> 張照片
+          </div>
+        </div>
+
+        <!-- 提交按鈕 -->
+        <div class="pt-4">
+          <button type="submit" id="submitBtn" class="btn-primary">
+            🚀 送出資料
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 進度卡片 -->
+    <div id="progressCard" class="card p-6 mb-6 hidden">
+      <h3 class="text-lg font-bold text-center mb-4">📤 上傳進度</h3>
+      
+      <!-- 進度條 -->
+      <div class="bg-gray-200 rounded-full h-8 overflow-hidden mb-3">
+        <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-green-500 h-full transition-all duration-500 flex items-center justify-center text-white font-bold">
+          0%
+        </div>
+      </div>
+      
+      <!-- 進度文字 -->
+      <p id="progressText" class="text-center text-gray-600 font-semibold">準備中...</p>
+      
+      <!-- 載入動畫 -->
+      <div class="flex justify-center mt-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    </div>
+
+    <!-- 成功訊息卡片 -->
+    <div id="successCard" class="card p-6 mb-6 hidden bg-green-50 border-green-200">
+      <div class="text-center">
+        <div class="text-6xl mb-4">✅</div>
+        <h3 class="text-xl font-bold text-green-800 mb-2">上傳成功！</h3>
+        <div class="card p-4 bg-white border-2 border-green-300">
+          <p class="font-bold text-gray-700">您的編號：</p>
+          <p id="recordIdDisplay" class="text-2xl font-bold text-green-600"></p>
+        </div>
+        <p class="text-sm text-green-700 mt-3">請記住此編號，以便日後查詢</p>
+      </div>
+    </div>
+
+    <!-- 錯誤訊息卡片 -->
+    <div id="errorCard" class="card p-6 mb-6 hidden bg-red-50 border-red-200">
+      <div class="text-center">
+        <div class="text-6xl mb-4">❌</div>
+        <h3 class="text-xl font-bold text-red-800 mb-2">發生錯誤</h3>
+        <div class="card p-4 bg-white border-2 border-red-300">
+          <p id="errorText" class="text-red-700"></p>
+        </div>
+        <button onclick="hideError()" class="mt-4 bg-red-600 text-white py-2 px-6 rounded-lg">
+          重新嘗試
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部安全區域 -->
+  <div class="h-8"></div>
+
+  <script>
+    let selectedImages = [];
+
+    // 地址預覽更新
+    function updateAddressPreview() {
+      const village = document.getElementById('village').value;
+      const neighborhood = document.getElementById('neighborhood').value;
+      const address = document.getElementById('address').value;
+      
+      let preview = '花蓮縣光復鄉';
+      if (village) preview += village;
+      if (neighborhood) preview += neighborhood + '鄰';
+      if (address) preview += address;
+      
+      document.getElementById('fullAddressPreview').textContent = preview;
+    }
+
+    // 綁定地址變更事件
+    document.getElementById('village').addEventListener('change', updateAddressPreview);
+    document.getElementById('neighborhood').addEventListener('input', updateAddressPreview);
+    document.getElementById('address').addEventListener('input', updateAddressPreview);
+
+    // 更新照片數量顯示
+    function updateImageCount() {
+      const countElement = document.getElementById('imageCount');
+      const numberElement = document.getElementById('imageCountNumber');
+      
+      if (selectedImages.length > 0) {
+        countElement.classList.remove('hidden');
+        numberElement.textContent = selectedImages.length;
+      } else {
+        countElement.classList.add('hidden');
+      }
+    }
+
+    // 圖片選擇處理
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+      const files = Array.from(e.target.files).slice(0, 5);
+      selectedImages = [];
+      const previewContainer = document.getElementById('imagePreview');
+      previewContainer.innerHTML = '';
+
+      if (files.length === 0) {
+        updateImageCount();
+        return;
+      }
+
+      files.forEach((file, index) => {
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+          selectedImages.push(event.target.result);
+          
+          const imgContainer = document.createElement('div');
+          imgContainer.className = 'relative group';
+          imgContainer.innerHTML = `
+            <div class="card overflow-hidden">
+              <img src="${event.target.result}" class="w-full h-32 object-cover">
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200"></div>
+              <div class="absolute top-2 right-2 bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm shadow-lg">
+                ${index + 1}
+              </div>
+              <button type="button" onclick="removeImage(${index})" 
+                      class="absolute top-2 left-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 active:bg-red-700 transition-colors shadow-lg">
+                ×
+              </button>
+            </div>
+            <p class="text-xs text-gray-600 mt-1 truncate px-1">${file.name}</p>
+          `;
+          previewContainer.appendChild(imgContainer);
+          updateImageCount();
+        };
+        
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // 移除圖片
+    window.removeImage = function(index) {
+      selectedImages.splice(index, 1);
+      
+      // 重新觸發 change 事件來更新預覽
+      const imageInput = document.getElementById('imageInput');
+      const dt = new DataTransfer();
+      
+      // 重新建立檔案列表（排除被移除的檔案）
+      Array.from(imageInput.files).forEach((file, i) => {
+        if (i !== index) {
+          dt.items.add(file);
+        }
+      });
+      
+      imageInput.files = dt.files;
+      imageInput.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+
+    // 隱藏錯誤訊息
+    window.hideError = function() {
+      document.getElementById('errorCard').classList.add('hidden');
+    };
+
+    // 顯示/隱藏卡片
+    function showCard(cardId) {
+      document.getElementById(cardId).classList.remove('hidden');
+      // 平滑滾動到卡片
+      document.getElementById(cardId).scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }
+
+    function hideCard(cardId) {
+      document.getElementById(cardId).classList.add('hidden');
+    }
+
+    // 更新進度
+    function updateProgress(percent, text) {
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      progressBar.style.width = percent + '%';
+      progressBar.textContent = percent + '%';
+      progressText.textContent = text;
+    }
+
+    // 表單提交
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // 隱藏所有訊息卡片
+      hideCard('successCard');
+      hideCard('errorCard');
+      
+      // 顯示進度卡片
+      showCard('progressCard');
+      
+      // 禁用提交按鈕
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50');
+      submitBtn.innerHTML = '⏳ 上傳中...';
+      
+      try {
+        // 驗證照片
+        if (selectedImages.length === 0) {
+          throw new Error('請至少上傳一張照片');
+        }
+        
+        // 更新進度
+        updateProgress(10, '📋 驗證資料...');
+        
+        // 準備資料
+        updateProgress(30, '📦 準備上傳...');
+        
+        const uploadData = {
+          name: document.getElementById('name').value,
+          phone: document.getElementById('phone').value,
+          email: document.getElementById('email').value,
+          village: document.getElementById('village').value,
+          neighborhood: document.getElementById('neighborhood').value,
+          address: document.getElementById('address').value,
+          images: selectedImages
+        };
+        
+        updateProgress(50, '☁️ 上傳中...');
+        
+        // 使用 google.script.run 呼叫後端
+        google.script.run
+          .withSuccessHandler(function(result) {
+            updateProgress(100, '✅ 完成！');
+            
+            setTimeout(() => {
+              hideCard('progressCard');
+              
+              if (result.success) {
+                showCard('successCard');
+                document.getElementById('recordIdDisplay').textContent = result.recordId;
+                
+                // 重設表單
+                document.getElementById('uploadForm').reset();
+                document.getElementById('imagePreview').innerHTML = '';
+                selectedImages = [];
+                updateImageCount();
+                updateAddressPreview();
+                
+              } else {
+                showCard('errorCard');
+                document.getElementById('errorText').textContent = result.message;
+              }
+              
+              // 恢復提交按鈕
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('opacity-50');
+              submitBtn.innerHTML = '🚀 送出資料';
+              
+            }, 1000);
+          })
+          .withFailureHandler(function(error) {
+            hideCard('progressCard');
+            showCard('errorCard');
+            document.getElementById('errorText').textContent = error.message || '上傳失敗，請稍後再試';
+            
+            // 恢復提交按鈕
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50');
+            submitBtn.innerHTML = '🚀 送出資料';
+          })
+          .submitUpload(uploadData);
+        
+      } catch (error) {
+        hideCard('progressCard');
+        showCard('errorCard');
+        document.getElementById('errorText').textContent = error.message;
+        
+        // 恢復提交按鈕
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50');
+        submitBtn.innerHTML = '🚀 送出資料';
+      }
+    });
+
+    // 頁面載入完成後初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAddressPreview();
+      updateImageCount();
+      
+      // 防止iOS Safari的彈跳效果
+      document.addEventListener('touchmove', function(e) {
+        if (!e.target.closest('.overflow-auto')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    });
+  </script>
+</body>
+</html>

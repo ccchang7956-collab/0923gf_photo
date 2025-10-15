@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>災害通報系統 - 查詢資料</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 自定義樣式 */
+    .card {
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f3f4f6;
+    }
+    .input-field {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.125rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-field:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    .btn-primary {
+      background-color: #059669;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: bold;
+      font-size: 1.125rem;
+      transition: all 0.2s;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background-color: #047857;
+    }
+    .btn-primary:active {
+      background-color: #065f46;
+    }
+    .btn-secondary {
+      background-color: #f3f4f6;
+      color: #374151;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-secondary:hover {
+      background-color: #e5e7eb;
+    }
+    .btn-secondary:active {
+      background-color: #d1d5db;
+    }
+    .record-card {
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f3f4f6;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #10b981;
+    }
+    /* 手機專用樣式 */
+    @media (max-width: 640px) {
+      .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+      }
+      .card {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-gray-100 min-h-screen">
+  <!-- 手機版標題卡片 -->
+  <div class="sticky top-0 z-40 bg-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+      <div class="text-center">
+        <h1 class="text-xl font-bold text-green-600">🔍 災害通報系統</h1>
+        <p class="text-sm text-gray-600">花蓮縣光復鄉 - 查詢資料</p>
+      </div>
+      
+      <!-- 導航按鈕 -->
+      <div class="flex mt-4 gap-2">
+        <a href="?page=input" class="flex-1 btn-secondary text-center py-2 px-4 text-sm">
+          📤 上傳資料
+        </a>
+        <button class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-semibold text-sm">
+          🔍 查詢資料
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-6 pb-20">
+    <!-- 查詢表單卡片 -->
+    <div class="card p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-200">
+        📱 輸入電話號碼查詢
+      </h2>
+      
+      <form id="queryForm">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-bold mb-3 text-lg">
+              電話號碼 <span class="text-red-500">*</span>
+            </label>
+            <input type="tel" id="queryPhone" required pattern="[0-9]{10}" 
+                   class="input-field" placeholder="0912345678" inputmode="numeric">
+            <p class="text-sm text-gray-500 mt-2">請輸入10碼電話號碼</p>
+          </div>
+          
+          <button type="submit" class="btn-primary w-full">
+            🔍 開始查詢
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 載入中卡片 -->
+    <div id="loadingCard" class="card p-8 mb-6 hidden text-center">
+      <div class="text-6xl mb-4">⏳</div>
+      <h3 class="text-xl font-bold text-gray-800 mb-4">查詢中...</h3>
+      <div class="flex justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600"></div>
+      </div>
+      <p class="text-gray-600 mt-4">請稍候，正在搜尋您的資料</p>
+    </div>
+
+    <!-- 查詢結果區域 -->
+    <div id="resultsSection" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-gray-800">📋 查詢結果</h2>
+        <span id="resultCount" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold"></span>
+      </div>
+      <div id="recordsList" class="space-y-4"></div>
+    </div>
+
+    <!-- 無結果卡片 -->
+    <div id="noResultsCard" class="card p-8 mb-6 hidden text-center">
+      <div class="text-6xl mb-4">😔</div>
+      <h3 class="text-xl font-bold text-gray-800 mb-2">查無資料</h3>
+      <p class="text-gray-600 mb-4">找不到此電話號碼的相關紀錄</p>
+      <div class="card p-4 bg-gray-50">
+        <p class="text-sm text-gray-700">請確認：</p>
+        <ul class="text-sm text-gray-600 mt-2 space-y-1">
+          <li>• 電話號碼是否正確</li>
+          <li>• 是否已完成資料上傳</li>
+          <li>• 嘗試使用其他號碼查詢</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 錯誤訊息卡片 -->
+    <div id="errorCard" class="card p-6 mb-6 hidden bg-red-50 border-red-200">
+      <div class="text-center">
+        <div class="text-6xl mb-4">❌</div>
+        <h3 class="text-xl font-bold text-red-800 mb-2">查詢失敗</h3>
+        <div class="card p-4 bg-white border-2 border-red-300">
+          <p id="errorText" class="text-red-700"></p>
+        </div>
+        <button onclick="hideError()" class="mt-4 bg-red-600 text-white py-2 px-6 rounded-lg">
+          重新查詢
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 照片檢視模態框 -->
+  <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-full w-full max-h-full overflow-auto">
+      <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center shadow-sm">
+        <h3 class="text-lg font-bold" id="modalTitle">📸 照片檢視</h3>
+        <button onclick="closeModal()" class="text-gray-600 hover:text-gray-800 text-3xl font-bold w-10 h-10 flex items-center justify-center">×</button>
+      </div>
+      <div id="modalContent" class="p-4"></div>
+    </div>
+  </div>
+
+  <script>
+    // 查詢功能
+    document.getElementById('queryForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const phone = document.getElementById('queryPhone').value;
+      hideAllCards();
+      showCard('loadingCard');
+      
+      try {
+        google.script.run
+          .withSuccessHandler(function(result) {
+            hideCard('loadingCard');
+            if (result.success && result.data.length > 0) {
+              displayResults(result.data);
+            } else {
+              showCard('noResultsCard');
+            }
+          })
+          .withFailureHandler(function(error) {
+            hideCard('loadingCard');
+            showCard('errorCard');
+            document.getElementById('errorText').textContent = error.message || '查詢失敗，請稍後再試';
+          })
+          .submitQuery(phone);
+      } catch (error) {
+        hideCard('loadingCard');
+        showCard('errorCard');
+        document.getElementById('errorText').textContent = error.message;
+      }
+    });
+
+    function displayResults(records) {
+      const recordsList = document.getElementById('recordsList');
+      const resultCount = document.getElementById('resultCount');
+      recordsList.innerHTML = '';
+      resultCount.textContent = records.length + ' 筆紀錄';
+      
+      records.forEach(record => {
+        const recordCard = document.createElement('div');
+        recordCard.className = 'record-card';
+        recordCard.innerHTML = `
+          <div class="flex justify-between items-start mb-3">
+            <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">📋 ${record.recordId}</span>
+            <span class="text-xs text-gray-500">${record.uploadTime}</span>
+          </div>
+          <div class="space-y-2 mb-4">
+            <div class="flex"><span class="text-gray-600 font-semibold w-16">👤</span><span class="text-gray-800">${record.name}</span></div>
+            <div class="flex"><span class="text-gray-600 font-semibold w-16">📞</span><span class="text-gray-800">${record.phone}</span></div>
+            <div class="flex"><span class="text-gray-600 font-semibold w-16">🏠</span><span class="text-gray-800">${record.fullAddress}</span></div>
+            <div class="flex"><span class="text-gray-600 font-semibold w-16">📸</span><span class="text-gray-800">${record.imageCount} 張照片</span></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="viewImages('${record.folderId}', '${record.fullAddress}')" class="bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold">📸 查看照片</button>
+            <button onclick="downloadZip('${record.folderId}', '${record.recordId}')" class="bg-gray-600 text-white py-3 px-4 rounded-lg font-semibold">📥 下載</button>
+          </div>`;
+        recordsList.appendChild(recordCard);
+      });
+      showCard('resultsSection');
+    }
+
+    async function viewImages(folderId, address) {
+      const modal = document.getElementById('imageModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalContent = document.getElementById('modalContent');
+      modalTitle.textContent = '📸 ' + address;
+      modalContent.innerHTML = '<div class="text-center py-8"><div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto"></div><p class="mt-4 text-gray-600">載入中...</p></div>';
+      modal.classList.remove('hidden');
+      
+      try {
+        google.script.run.withSuccessHandler(function(images) {
+          if (images.length === 0) {
+            modalContent.innerHTML = '<p class="text-center text-gray-600 py-8">此紀錄沒有照片</p>';
+            return;
+          }
+          modalContent.innerHTML = '';
+          const grid = document.createElement('div');
+          grid.className = 'space-y-4';
+          images.forEach((image, index) => {
+            google.script.run.withSuccessHandler(function(result) {
+              if (result.success) {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'card p-3';
+                imgDiv.innerHTML = `<div class="relative"><img src="${result.data}" class="w-full h-64 object-cover rounded-lg"><div class="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-sm font-bold">${index + 1}</div></div><p class="mt-2 text-sm text-gray-600 truncate">${image.name}</p>`;
+                grid.appendChild(imgDiv);
+              }
+            }).getImageBase64(image.id);
+          });
+          modalContent.appendChild(grid);
+        }).getImages(folderId);
+      } catch (error) {
+        modalContent.innerHTML = '<p class="text-center text-red-600 py-8">載入失敗：' + error.message + '</p>';
+      }
+    }
+
+    async function downloadZip(folderId, recordId) {
+      const adminKey = prompt('請輸入管理員密鑰：');
+      if (!adminKey) return;
+      try {
+        const formData = new FormData();
+        formData.append('action', 'downloadZip');
+        formData.append('folderId', folderId);
+        formData.append('adminKey', adminKey);
+        const response = await fetch(window.location.href, { method: 'POST', body: formData });
+        const base64Data = await response.text();
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) { bytes[i] = binaryString.charCodeAt(i); }
+        const blob = new Blob([bytes], { type: 'application/zip' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = recordId + '.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        alert('下載成功！');
+      } catch (error) {
+        alert('下載失敗：' + error.message);
+      }
+    }
+
+    function closeModal() { document.getElementById('imageModal').classList.add('hidden'); }
+    function showCard(cardId) { document.getElementById(cardId).classList.remove('hidden'); document.getElementById(cardId).scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    function hideCard(cardId) { document.getElementById(cardId).classList.add('hidden'); }
+    function hideAllCards() { hideCard('resultsSection'); hideCard('noResultsCard'); hideCard('errorCard'); hideCard('loadingCard'); }
+    window.hideError = function() { hideCard('errorCard'); };
+    document.getElementById('imageModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>災害通報系統 - 查詢資料</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- 標題 -->
+    <div class="bg-green-600 text-white p-6 rounded-t-lg shadow-lg">
+      <h1 class="text-2xl font-bold text-center">花蓮縣光復鄉災害通報系統</h1>
+      <p class="text-center mt-2 text-green-100">查詢資料</p>
+    </div>
+
+    <!-- 導航 -->
+    <div class="bg-white p-4 shadow">
+      <div class="flex justify-center space-x-4">
+        <a href="?page=input" class="bg-gray-300 text-gray-700 px-4 py-2 rounded font-semibold">上傳資料</a>
+        <button class="bg-green-600 text-white px-4 py-2 rounded font-semibold">查詢資料</button>
+      </div>
+    </div>
+
+    <!-- 查詢表單 -->
+    <div class="bg-white p-6 rounded-b-lg shadow-lg">
+      <form id="queryForm" class="mb-6">
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block text-gray-700 font-semibold mb-2">請輸入電話號碼</label>
+            <input type="tel" id="queryPhone" required pattern="[0-9]{10}"
+                   placeholder="請輸入10碼電話號碼"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+          <div class="flex items-end">
+            <button type="submit" 
+                    class="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition duration-300">
+              查詢
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- 載入中 -->
+      <div id="loading" class="hidden text-center py-8">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <p class="mt-4 text-gray-600">查詢中...</p>
+      </div>
+
+      <!-- 查詢結果 -->
+      <div id="results" class="hidden">
+        <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">查詢結果</h2>
+        <div id="recordsList"></div>
+      </div>
+
+      <!-- 無結果 -->
+      <div id="noResults" class="hidden text-center py-8">
+        <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="mt-4 text-gray-600 text-lg">查無資料</p>
+        <p class="text-gray-500">請確認電話號碼是否正確</p>
+      </div>
+
+      <!-- 錯誤訊息 -->
+      <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+        <p class="font-bold">發生錯誤</p>
+        <p id="errorText"></p>
+      </div>
+    </div>
+
+    <!-- 照片檢視模態框 -->
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg max-w-4xl w-full max-h-full overflow-auto">
+        <div class="p-4 border-b flex justify-between items-center">
+          <h3 class="text-xl font-bold" id="modalTitle">照片檢視</h3>
+          <button onclick="closeModal()" class="text-gray-600 hover:text-gray-800 text-2xl font-bold">×</button>
+        </div>
+        <div id="modalContent" class="p-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 查詢表單提交
+    document.getElementById('queryForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const phone = document.getElementById('queryPhone').value;
+      
+      // 隱藏所有結果區域
+      document.getElementById('results').classList.add('hidden');
+      document.getElementById('noResults').classList.add('hidden');
+      document.getElementById('errorMessage').classList.add('hidden');
+      document.getElementById('loading').classList.remove('hidden');
+      
+      try {
+        // 使用 google.script.run 呼叫後端
+        google.script.run
+          .withSuccessHandler(function(result) {
+            document.getElementById('loading').classList.add('hidden');
+            
+            if (result.success) {
+              displayResults(result.data);
+            } else {
+              document.getElementById('noResults').classList.remove('hidden');
+            }
+          })
+          .withFailureHandler(function(error) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('errorMessage').classList.remove('hidden');
+            document.getElementById('errorText').textContent = error.message || '查詢失敗，請稍後再試';
+          })
+          .submitQuery(phone);
+          
+      } catch (error) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('errorMessage').classList.remove('hidden');
+        document.getElementById('errorText').textContent = error.message;
+      }
+    });
+
+    // 顯示查詢結果
+    function displayResults(records) {
+      const recordsList = document.getElementById('recordsList');
+      recordsList.innerHTML = '';
+      
+      records.forEach(record => {
+        const recordCard = document.createElement('div');
+        recordCard.className = 'bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200';
+        recordCard.innerHTML = `
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                編號：${record.recordId}
+              </span>
+            </div>
+            <div class="text-sm text-gray-500">
+              ${record.uploadTime}
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+            <div>
+              <span class="text-gray-600 font-semibold">姓名：</span>
+              <span class="text-gray-800">${record.name}</span>
+            </div>
+            <div>
+              <span class="text-gray-600 font-semibold">電話：</span>
+              <span class="text-gray-800">${record.phone}</span>
+            </div>
+            <div class="md:col-span-2">
+              <span class="text-gray-600 font-semibold">信箱：</span>
+              <span class="text-gray-800">${record.email || '未提供'}</span>
+            </div>
+            <div class="md:col-span-2">
+              <span class="text-gray-600 font-semibold">地址：</span>
+              <span class="text-gray-800">${record.fullAddress}</span>
+            </div>
+            <div>
+              <span class="text-gray-600 font-semibold">照片數量：</span>
+              <span class="text-gray-800">${record.imageCount} 張</span>
+            </div>
+          </div>
+          
+          <div class="flex gap-2">
+            <button onclick="viewImages('${record.folderId}', '${record.fullAddress}')" 
+                    class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+              <svg class="inline-block w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              查看照片
+            </button>
+            <button onclick="downloadZip('${record.folderId}', '${record.recordId}')" 
+                    class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
+              <svg class="inline-block w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </button>
+          </div>
+        `;
+        recordsList.appendChild(recordCard);
+      });
+      
+      document.getElementById('results').classList.remove('hidden');
+    }
+
+    // 查看照片
+    async function viewImages(folderId, address) {
+      const modal = document.getElementById('imageModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalTitle.textContent = `照片檢視 - ${address}`;
+      modalContent.innerHTML = '<div class="text-center py-8"><div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div><p class="mt-4 text-gray-600">載入中...</p></div>';
+      modal.classList.remove('hidden');
+      
+      try {
+        // 使用 Google Apps Script 的 google.script.run 來取得照片
+        google.script.run
+          .withSuccessHandler(function(images) {
+            if (images.length === 0) {
+              modalContent.innerHTML = '<p class="text-center text-gray-600 py-8">此紀錄沒有照片</p>';
+              return;
+            }
+            
+            modalContent.innerHTML = '';
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+            
+            images.forEach((image, index) => {
+              // 使用 google.script.run 取得照片的 base64 資料
+              google.script.run
+                .withSuccessHandler(function(result) {
+                  if (result.success) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'relative';
+                    imgDiv.innerHTML = `
+                      <img src="${result.data}" class="w-full h-64 object-cover rounded-lg border-2 border-gray-300">
+                      <div class="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-sm font-semibold">
+                        ${index + 1}
+                      </div>
+                      <p class="mt-2 text-sm text-gray-600 truncate">${image.name}</p>
+                    `;
+                    grid.appendChild(imgDiv);
+                  }
+                })
+                .withFailureHandler(function(error) {
+                  console.error('Error loading image:', error);
+                })
+                .getImageBase64(image.id);
+            });
+            
+            modalContent.appendChild(grid);
+          })
+          .withFailureHandler(function(error) {
+            modalContent.innerHTML = `<p class="text-center text-red-600 py-8">載入失敗：${error.message}</p>`;
+          })
+          .getImages(folderId);
+          
+      } catch (error) {
+        modalContent.innerHTML = `<p class="text-center text-red-600 py-8">載入失敗：${error.message}</p>`;
+      }
+    }
+
+    // 關閉模態框
+    function closeModal() {
+      document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // 點擊模態框外部關閉
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // 下載 ZIP（管理員功能）
+    async function downloadZip(folderId, recordId) {
+      const adminKey = prompt('請輸入管理員密鑰：');
+      if (!adminKey) return;
+      
+      try {
+        const formData = new FormData();
+        formData.append('action', 'downloadZip');
+        formData.append('folderId', folderId);
+        formData.append('adminKey', adminKey);
+        
+        const response = await fetch(window.location.href, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const base64Data = await response.text();
+        
+        // 轉換 base64 為 blob 並下載
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'application/zip' });
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${recordId}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        alert('下載成功！');
+      } catch (error) {
+        alert('下載失敗：' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
