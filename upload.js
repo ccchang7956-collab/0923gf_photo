@@ -14,12 +14,8 @@ function initializePage() {
   // 綁定事件監聽器
   bindEventListeners();
   
-  // 防止iOS Safari的彈跳效果
-  document.addEventListener('touchmove', function(e) {
-    if (!e.target.closest('.overflow-auto')) {
-      e.preventDefault();
-    }
-  }, { passive: false });
+  // 允許正常滾動
+  // 移除了會阻止手機滾動的代碼
 }
 
 // ==================== 事件監聽器綁定 ====================
