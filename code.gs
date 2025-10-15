@@ -43,6 +43,10 @@ function doPost(e) {
       return handleUpload(e);
     } else if (action === 'query') {
       return handleQuery(e);
+    } else if (action === 'getImages') {
+      return handleGetImages(e);
+    } else if (action === 'getImageBase64') {
+      return handleGetImageBase64(e);
     } else if (action === 'downloadZip') {
       return handleDownloadZip(e);
     }
@@ -58,6 +62,94 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
       message: '系統錯誤：' + error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ==================== 處理上傳 POST 請求 ====================
+function handleUpload(e) {
+  try {
+    const data = {
+      name: e.parameter.name,
+      phone: e.parameter.phone,
+      email: e.parameter.email,
+      village: e.parameter.village,
+      neighborhood: e.parameter.neighborhood,
+      address: e.parameter.address,
+      images: []
+    };
+    
+    // 處理圖片陣列
+    let imageIndex = 0;
+    while (e.parameter[`images[${imageIndex}]`]) {
+      data.images.push(e.parameter[`images[${imageIndex}]`]);
+      imageIndex++;
+    }
+    
+    const result = submitUpload(data);
+    
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    Logger.log('Error in handleUpload: ' + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: '上傳處理失敗：' + error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ==================== 處理查詢 POST 請求 ====================
+function handleQuery(e) {
+  try {
+    const phone = e.parameter.phone;
+    const result = submitQuery(phone);
+    
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    Logger.log('Error in handleQuery: ' + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: '查詢處理失敗：' + error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ==================== 處理取得照片 POST 請求 ====================
+function handleGetImages(e) {
+  try {
+    const folderId = e.parameter.folderId;
+    const result = getImages(folderId);
+    
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    Logger.log('Error in handleGetImages: ' + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: '取得照片失敗：' + error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ==================== 處理取得單張照片 POST 請求 ====================
+function handleGetImageBase64(e) {
+  try {
+    const fileId = e.parameter.fileId;
+    const result = getImageBase64(fileId);
+    
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    Logger.log('Error in handleGetImageBase64: ' + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: '取得照片失敗：' + error.toString()
     })).setMimeType(ContentService.MimeType.JSON);
   }
 }
