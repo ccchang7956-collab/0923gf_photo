@@ -5,7 +5,7 @@
 // 請將 'YOUR_SCRIPT_URL_HERE' 替換為您的實際 Google Apps Script 部署網址
 const CONFIG = {
   // 您的 Google Apps Script 網址
-  API_URL: 'https://script.google.com/macros/s/AKfycby1dtqw--zBYfmyDgru0iBJfPbX33L6xE9R3HjoZQGcPZo7nlDcpnl0hRoWDgry7GmtDg/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzZFv2qDYh08MmgwsNr8Ei9GkP2UtfdA05aw3yQtHizaxwqIxgVltrBnUQOK4lCynAi0w/exec',
   
   // 系統設定
   MAX_IMAGES: 5,

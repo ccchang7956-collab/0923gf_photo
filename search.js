@@ -211,7 +211,14 @@ window.viewImages = async function(folderId, address) {
   try {
     const images = await callAPI('getImages', { folderId: folderId });
     
-    if (!images || images.length === 0) {
+    // 檢查回應格式
+    let imageList = images;
+    if (images && typeof images === 'object' && images.length === undefined) {
+      // 如果是包裝過的物件，提取實際的陣列
+      imageList = images.data || images;
+    }
+    
+    if (!imageList || imageList.length === 0) {
       modalContent.innerHTML = '<p class="text-center text-gray-600 py-8">此紀錄沒有照片</p>';
       return;
     }
@@ -221,8 +228,8 @@ window.viewImages = async function(folderId, address) {
     grid.className = 'space-y-4';
     
     // 逐一載入照片
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
+    for (let i = 0; i < imageList.length; i++) {
+      const image = imageList[i];
       try {
         const result = await callAPI('getImageBase64', { fileId: image.id });
         

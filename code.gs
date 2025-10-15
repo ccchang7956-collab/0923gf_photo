@@ -221,7 +221,7 @@ function submitUpload(data) {
     sheet.appendRow([
       recordId,
       data.name,
-      data.phone,
+      "'" + data.phone,  // 加上單引號防止電話號碼被當成數字處理
       data.email || '',
       data.village,
       data.neighborhood,
@@ -266,7 +266,8 @@ function submitQuery(phone) {
     // 從第二列開始（跳過標題）
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      if (row[2] === phone) { // 電話在第3欄（索引2）
+      const rowPhone = row[2].toString().replace(/^'/, ''); // 移除開頭的單引號
+      if (rowPhone === phone) { // 電話在第3欄（索引2）
         results.push({
           recordId: row[0],
           name: row[1],
