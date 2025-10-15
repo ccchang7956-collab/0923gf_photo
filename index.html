@@ -2,7 +2,10 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>災害通報 - 資料上傳</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -78,14 +81,49 @@
       padding-bottom: 0.5rem;
       border-bottom: 2px solid #e5e7eb;
     }
+    /* iOS Safari 滑動修復 */
+    body {
+      -webkit-overflow-scrolling: touch;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 防止 iOS Safari 橡皮筋效果，但允許正常滑動 */
+    body.no-scroll {
+      position: fixed;
+      width: 100%;
+    }
+    
+    /* 輸入框聚焦時的處理 */
+    .input-field:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    
     @media (max-width: 640px) {
       .container {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
+        -webkit-overflow-scrolling: touch;
       }
       .card {
         margin-left: 0.25rem;
         margin-right: 0.25rem;
+      }
+      
+      /* iOS Safari 特殊處理 */
+      body {
+        min-height: -webkit-fill-available;
+      }
+      
+      /* 防止輸入時頁面跳動 */
+      .input-field, select {
+        font-size: 16px; /* 防止 iOS 縮放 */
       }
     }
   </style>

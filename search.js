@@ -11,6 +11,58 @@ function initializePage() {
   
   // 檢查 URL 參數是否有電話號碼
   checkURLParams();
+  
+  // iOS Safari 滑動修復
+  fixiOSScrolling();
+}
+
+// ==================== iOS Safari 滑動修復 ====================
+function fixiOSScrolling() {
+  // 檢測是否為 iOS Safari
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
+  if (isIOS) {
+    // 修復 iOS 滑動問題
+    document.body.style.webkitOverflowScrolling = 'touch';
+    
+    // 防止輸入框聚焦時的跳動
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        // 輕微延遲後滾動到輸入框
+        setTimeout(() => {
+          this.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }, 300);
+      });
+      
+      input.addEventListener('blur', function() {
+        // 輸入完成後滾動到頂部
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+      });
+    });
+    
+    // 處理虛擬鍵盤
+    let initialViewportHeight = window.innerHeight;
+    
+    window.addEventListener('resize', function() {
+      const currentHeight = window.innerHeight;
+      const heightDifference = initialViewportHeight - currentHeight;
+      
+      // 如果高度差異超過 150px，可能是虛擬鍵盤打開
+      if (heightDifference > 150) {
+        document.body.style.height = currentHeight + 'px';
+      } else {
+        document.body.style.height = 'auto';
+      }
+    });
+  }
 }
 
 // ==================== 事件監聽器綁定 ====================
